@@ -2,9 +2,9 @@ import React from 'react'
 
 const ConfirmarCuenta = () => {
     return (
-        <div>
-            Confimrar cuenta
-        </div>
+        <>
+            <h1 className='text-sky-600 font-black text-6xl'>Confirma tu cuenta  y  administra <span className='text-slate-700'> proyectos </span> </h1>
+        </>
     )
 }
 
