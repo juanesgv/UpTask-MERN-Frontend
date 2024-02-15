@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { useState } from "react"
 import Alerta from "../components/Alerta"
-import axios from "axios"
+import clienteAxios from "../config/clienteAxios"
 
 const Registrar = () => {
 
@@ -43,8 +43,7 @@ const Registrar = () => {
 
         //post a la api
         try {
-            const api_url = import.meta.env.VITE_API_URL
-            const {data} = await axios.post( `${api_url}/api/usuarios`, {nombre,email,password} )
+            const {data} = await clienteAxios.post( `/usuarios`, {nombre,email,password} )
             setAlerta({
                 msg:data.msg,
                 error: false
