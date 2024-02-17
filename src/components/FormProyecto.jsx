@@ -1,4 +1,7 @@
 import { useState } from "react"
+import useProyectos from "../hooks/useProyectos"
+import Alerta from "./Alerta"
+
 
 const FormProyecto = () => {
 
@@ -7,13 +10,35 @@ const FormProyecto = () => {
     const [fechaEntrega, setFechaEntrega] = useState('')
     const [cliente, setCliente] = useState('')
 
+    const {alerta ,mostrarAlerta, submitProyecto} = useProyectos()
+
     const handleSubmit = async e =>{
         e.preventDefault();
-        console.log("di clic")
+        
+        if([nombre,descripcion,fechaEntrega,cliente].includes('')){
+            mostrarAlerta({
+                msg : "Todos los campos son obligatorios",
+                error: true
+            })
+            return
+        }
+
+        //pasar los datos hacia el provider
+        await submitProyecto({nombre, descripcion, fechaEntrega, cliente})
+        setNombre('')
+        setDescripcion('')
+        setFechaEntrega('')
+        setCliente('')
+
     }
+
+    const {msg} = alerta
 
     return (
         <form className='bg-white py-10 px-5 md:w-1/2 rounded-lg shadow' onSubmit={handleSubmit}>
+
+            {msg && <Alerta alerta={alerta}/>}
+
             <div className="mb-5">
                 <label className='text-gray-700 uppercase font-bold text-sm' htmlFor='nombre'>Nombre del proyecto</label>
                 <input 
