@@ -21,7 +21,7 @@ const EditarProyecto = () => {
                     </svg>
                 </Link>
                 <h1 className='text-4xl font-black'>
-                    Editar proyecto : {proyecto.proyecto.nombre}
+                    Editar proyecto : {proyecto.nombre}
                 </h1>
             </div>
 

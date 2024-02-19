@@ -18,11 +18,11 @@ const FormProyecto = () => {
 
     useEffect(()=>{
         if(params.id){
-            setId(proyecto.proyecto._id)
-            setNombre(proyecto.proyecto.nombre)
-            setDescripcion(proyecto.proyecto.descripcion)
-            setFechaEntrega(proyecto.proyecto.fechaEntrega?.split('T')[0])
-            setCliente(proyecto.proyecto.cliente)
+            setId(proyecto._id)
+            setNombre(proyecto.nombre)
+            setDescripcion(proyecto.descripcion)
+            setFechaEntrega(proyecto.fechaEntrega?.split('T')[0])
+            setCliente(proyecto.cliente)
         }
     },[params])
 

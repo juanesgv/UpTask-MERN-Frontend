@@ -32,7 +32,7 @@ const Proyecto = () => {
                             </svg>
                         </Link>
                         <h1 className="font-black text-4xl">
-                            {proyecto?.proyecto?.nombre || "Proyecto no disponible"}
+                            {proyecto?.nombre || "Proyecto no disponible"}
                         </h1>
                     </div>
 
