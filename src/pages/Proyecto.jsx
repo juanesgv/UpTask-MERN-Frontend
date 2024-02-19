@@ -8,7 +8,7 @@ import ModalFormTarea from "../components/ModalFormTarea"
 const Proyecto = () => {
 
     const params = useParams()
-    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, alerta, handleModalTarea } = useProyectos()
+    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea } = useProyectos()
     const [modal, setModal] = useState(false)
 
     useEffect(() => {
@@ -20,8 +20,6 @@ const Proyecto = () => {
             eliminarProyecto(params.id)
         }
     }
-
-    const { msg } = alerta
 
     return (
         cargando ? <Spinner /> : (
@@ -61,7 +59,6 @@ const Proyecto = () => {
                     agregar tarea
                 </button>
                 <ModalFormTarea modal={modal} setModal={setModal}/>
-                {msg && <Alerta alerta={alerta} />}
             </>
         )
     )

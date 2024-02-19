@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import clienteAxios from "../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"
 
 const ProyectosContext = createContext()
 
@@ -94,10 +95,7 @@ const ProyectoProvider = ({ children }) => {
             const { data } = await clienteAxios.post('/proyectos', proyecto, config)
             setProyectos([...proyectos, data]) //hago una copia de lo que hay en el state de proyectos actualmente para agregarle el proyecro recien creado
 
-            setAlerta({
-                msg: 'Proyecto creado exitosamente',
-                error: false
-            })
+            toast.success('Proyecto creado exitosamente')
 
             setTimeout(() => {
                 setAlerta({})
@@ -127,10 +125,7 @@ const ProyectoProvider = ({ children }) => {
             const proyectosActualizados = proyectos.map(proyectoState => proyectoState._id === data._id ? data : proyectoState) //comparo el proyecto actualizado con el que está en el state para actualizarlado en el state, los demás proyectos quedan igual
             setProyectos(proyectosActualizados)
 
-            setAlerta({
-                msg: 'Proyecto actualizado exitosamente',
-                error: false
-            })
+            toast.success('Proyecto actualizado exitosamente')
 
             setTimeout(() => {
                 setAlerta({})
@@ -160,10 +155,7 @@ const ProyectoProvider = ({ children }) => {
             const proyectosActualizados = proyectos.filter(proyectoState => proyectoState._id !== id)
             setProyectos(proyectosActualizados)
 
-            setAlerta({
-                msg: data.msg,
-                error: false
-            })
+            toast.success(data.msg)
             
 
             setTimeout(() => {

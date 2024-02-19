@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Link, useParams, useNavigate } from "react-router-dom"
 import clienteAxios from "../config/clienteAxios"
 import Alerta from "../components/Alerta"
+import { toast } from "react-toastify"
 
 const NuevoPassword = () => {
 
@@ -44,10 +45,7 @@ const NuevoPassword = () => {
         try {
             const url = `/usuarios/olvide-password/${token}`
             const {data} = await clienteAxios.post(url,{password})
-            setAlerta({
-                msg: data.msg,
-                error: false
-            })
+            toast.success(data.msg)
             setPasswordModificado(true)
             setTimeout(() => {
                 navigate('/');

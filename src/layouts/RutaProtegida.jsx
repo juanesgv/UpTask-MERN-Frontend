@@ -3,6 +3,8 @@ import useAuth from "../hooks/useAuth"
 import Spinner from "../components/Spinner"
 import Sidebar from "../components/Sidebar"
 import Header from "../components/Header"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css";
 
 const RutaProtegida = () => {
 
@@ -26,6 +28,7 @@ const RutaProtegida = () => {
                     </div>
                 </div>
             ) : <Navigate to="/"/>}
+            <ToastContainer/>
         </>
     )
 }
