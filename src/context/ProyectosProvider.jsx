@@ -13,6 +13,7 @@ const ProyectoProvider = ({ children }) => {
     const [cargando, setCargando] = useState(false)
     const [modalFormTarea,  setModalFormTarea] = useState(false)
     const [tarea,  setTarea] = useState({})
+    const [modalEliminarTarea,  setModalEliminarTarea] = useState(false)
 
     const navgiate = useNavigate()
 
@@ -243,6 +244,36 @@ const ProyectoProvider = ({ children }) => {
         setModalFormTarea(true)
     }
 
+    const handleModalEliminarTarea = tarea => {
+        setTarea(tarea)
+        setModalEliminarTarea(!modalEliminarTarea)
+    }
+
+    const EliminarTarea = async () => {
+        try {
+            const token = localStorage.getItem('token')
+            if (!token) return
+
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const {data} = await clienteAxios.delete(`/tareas/${tarea._id}`, config )
+            const proyectoActualizado = {...proyecto}
+            proyectoActualizado.tareas = proyectoActualizado.tareas.filter(TareaState => TareaState._id !== tarea._id)
+            setProyecto(proyectoActualizado)
+            toast.success(data.msg)
+            setModalEliminarTarea(false)
+            setTarea({})
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <ProyectosContext.Provider
             value={{
@@ -258,7 +289,10 @@ const ProyectoProvider = ({ children }) => {
                 handleModalTarea,
                 submitTarea,
                 handleModalEditarTarea,
-                tarea
+                tarea,
+                modalEliminarTarea,
+                handleModalEliminarTarea,
+                EliminarTarea
             }}
         >
             {children}

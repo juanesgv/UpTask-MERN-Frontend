@@ -19,7 +19,6 @@ const ModalFormTarea = () => {
     const params = useParams()
 
     useEffect(()=>{
-        console.log(tarea)
         if(tarea?._id){
             setId(tarea._id)
             setNombre(tarea.nombre)

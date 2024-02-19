@@ -4,6 +4,7 @@ import useProyectos from "../hooks/useProyectos"
 import Spinner from "../components/Spinner"
 import ModalFormTarea from "../components/ModalFormTarea"
 import Tarea from "../components/Tarea"
+import ModalEliminarTarea from "../components/ModalEliminarTarea"
 
 const Proyecto = () => {
 
@@ -69,6 +70,7 @@ const Proyecto = () => {
                 </div>
 
                 <ModalFormTarea/>
+                <ModalEliminarTarea/>
             </>
         )
     )
