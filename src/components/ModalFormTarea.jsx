@@ -8,20 +8,37 @@ const PRIORIDAD  = ['Baja', 'Media', 'Alta']
 
 const ModalFormTarea = () => {
 
-    const {modalFormTarea, handleModalTarea, mostrarAlerta, alerta, submitTarea} = useProyectos()
+    const {modalFormTarea, handleModalTarea, mostrarAlerta, alerta, submitTarea, tarea} = useProyectos()
 
+    const [id, setId] = useState('')
     const [nombre, setNombre] = useState('')
     const [descripcion, setDescripcion] = useState('')
     const [prioridad, setPrioridad] = useState('')
-    const [fechaEntrga, setFechaEntrga] = useState('')
+    const [fechaEntrega, setFechaEntrega] = useState('')
 
     const params = useParams()
+
+    useEffect(()=>{
+        console.log(tarea)
+        if(tarea?._id){
+            setId(tarea._id)
+            setNombre(tarea.nombre)
+            setDescripcion(tarea.descripcion)
+            setPrioridad(tarea.prioridad)
+            setFechaEntrega(tarea.fechaEntrega?.split('T')[0])
+            return
+        }
+        setId('')
+        setNombre('')
+        setDescripcion('')
+        setPrioridad('')
+        setFechaEntrega('')
+    },[tarea])
 
     const handleSubmit = async e => {
         e.preventDefault()
 
-        if([nombre, descripcion, prioridad, fechaEntrga].includes('')){
-            console.log("todos los datos son obligatorios")
+        if([nombre, descripcion, prioridad, fechaEntrega].includes('')){
             mostrarAlerta({
                 msg : "Todos los campos son obligatorios",
                 error: true
@@ -29,12 +46,12 @@ const ModalFormTarea = () => {
             return
         }
 
-        await submitTarea({nombre, descripcion, prioridad, fechaEntrga, proyecto:params.id})
-        console.log("Lo que envío desde el form",{nombre,descripcion,prioridad,fechaEntrga})
+        await submitTarea({id, nombre, descripcion, prioridad, fechaEntrega, proyecto:params.id})
+        setId('')
         setNombre('')
         setDescripcion('')
         setPrioridad('')
-        setFechaEntrga('')
+        setFechaEntrega('')
     }
 
     const {msg} = alerta
@@ -91,7 +108,7 @@ const ModalFormTarea = () => {
                             <div className="sm:flex sm:items-start">
                                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                     <Dialog.Title as="h3" className="text-lg leading-6 font-bold text-gray-900">
-                                        Crear tarea                                    
+                                        {id ? 'Editar tarea' : 'Crear tarea'}
                                     </Dialog.Title>
 
                                     {msg && <Alerta alerta={alerta}/>}
@@ -126,8 +143,8 @@ const ModalFormTarea = () => {
                                                 type='date'
                                                 id='fecha'
                                                 className='border w-full p-2 mt-2 placeholder-gray-400 rounded-md'
-                                                value={fechaEntrga}
-                                                onChange={e => setFechaEntrga(e.target.value)}
+                                                value={fechaEntrega}
+                                                onChange={e => setFechaEntrega(e.target.value)}
                                             />
                                         </div>
 
@@ -148,6 +165,7 @@ const ModalFormTarea = () => {
                                         <input
                                             type='submit'
                                             className='bg-sky-600 hover:bg-sky-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors rounded text-sm'
+                                            value={id ? 'Guardar cambios' : 'Crear tarea'}
                                         />
                                     </form>
                                 </div>

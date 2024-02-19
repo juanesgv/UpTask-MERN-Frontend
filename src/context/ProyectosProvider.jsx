@@ -12,6 +12,7 @@ const ProyectoProvider = ({ children }) => {
     const [alerta, setAlerta] = useState({})
     const [cargando, setCargando] = useState(false)
     const [modalFormTarea,  setModalFormTarea] = useState(false)
+    const [tarea,  setTarea] = useState({})
 
     const navgiate = useNavigate()
 
@@ -170,9 +171,20 @@ const ProyectoProvider = ({ children }) => {
 
     const handleModalTarea = () => {
         setModalFormTarea(!modalFormTarea)
+        setTarea({})
     }
 
     const submitTarea = async tarea => {
+        
+        if(tarea?.id){
+            await editarTarea(tarea)
+        }else{
+            await crearTarea(tarea)
+        }
+
+    }
+
+    const crearTarea = async tarea => {
         try {
             const token = localStorage.getItem('token')
             if (!token) return
@@ -185,7 +197,6 @@ const ProyectoProvider = ({ children }) => {
             }
 
             const {data} = await clienteAxios.post('/tareas', tarea, config)
-            console.log("Lo que envío al servidor", data)
             
             //Agregar la tarea creada al state
             const proyectoActualizado = {...proyecto}
@@ -197,6 +208,39 @@ const ProyectoProvider = ({ children }) => {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    const editarTarea = async tarea => {
+        try {
+            const token = localStorage.getItem('token')
+            if (!token) return
+
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+            
+            const {data} = await clienteAxios.put(`/tareas/${tarea.id}`, tarea, config)
+            console.log(data)
+
+            //actualizar el dom
+            const proyectoActualizado = {...proyecto}
+            proyectoActualizado.tareas = proyectoActualizado.tareas.map(tareaState => tareaState._id === data._id ? data : tareaState)
+
+            setProyecto(proyectoActualizado)
+            setAlerta({})
+            setModalFormTarea(false)
+            toast.success('Tarea editada exitosamente')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleModalEditarTarea = tarea =>{
+        setTarea(tarea)
+        setModalFormTarea(true)
     }
 
     return (
@@ -212,7 +256,9 @@ const ProyectoProvider = ({ children }) => {
                 eliminarProyecto,
                 modalFormTarea,
                 handleModalTarea,
-                submitTarea
+                submitTarea,
+                handleModalEditarTarea,
+                tarea
             }}
         >
             {children}

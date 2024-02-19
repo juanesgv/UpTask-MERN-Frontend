@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import useProyectos from "../hooks/useProyectos"
 import Spinner from "../components/Spinner"
 import ModalFormTarea from "../components/ModalFormTarea"
@@ -9,7 +9,6 @@ const Proyecto = () => {
 
     const params = useParams()
     const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea } = useProyectos()
-    const [modal, setModal] = useState(false)
 
     useEffect(() => {
         obtenerProyecto(params.id)
@@ -69,7 +68,7 @@ const Proyecto = () => {
                     }
                 </div>
 
-                <ModalFormTarea modal={modal} setModal={setModal} />
+                <ModalFormTarea/>
             </>
         )
     )
