@@ -17,7 +17,7 @@ const ModalFormTarea = () => {
 
     const params = useParams()
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault()
 
         if([nombre, descripcion, prioridad, fechaEntrga].includes('')){
@@ -29,7 +29,12 @@ const ModalFormTarea = () => {
             return
         }
 
-        submitTarea({nombre, descripcion, prioridad, fechaEntrga, proyecto:params.id})
+        await submitTarea({nombre, descripcion, prioridad, fechaEntrga, proyecto:params.id})
+        console.log("Lo que envío desde el form",{nombre,descripcion,prioridad,fechaEntrga})
+        setNombre('')
+        setDescripcion('')
+        setPrioridad('')
+        setFechaEntrga('')
     }
 
     const {msg} = alerta

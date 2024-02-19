@@ -185,8 +185,15 @@ const ProyectoProvider = ({ children }) => {
             }
 
             const {data} = await clienteAxios.post('/tareas', tarea, config)
-            console.log(data)
+            console.log("Lo que envío al servidor", data)
             
+            //Agregar la tarea creada al state
+            const proyectoActualizado = {...proyecto}
+            proyectoActualizado.tareas = [...proyecto.tareas, data]
+            setProyecto(proyectoActualizado)
+            setAlerta({})
+            setModalFormTarea(false)
+            toast.success('Tarea creada exitosamente')
         } catch (error) {
             console.log(error)
         }

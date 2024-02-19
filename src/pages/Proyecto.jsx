@@ -2,8 +2,8 @@ import { useParams, Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 import useProyectos from "../hooks/useProyectos"
 import Spinner from "../components/Spinner"
-import Alerta from "../components/Alerta"
 import ModalFormTarea from "../components/ModalFormTarea"
+import Tarea from "../components/Tarea"
 
 const Proyecto = () => {
 
@@ -51,14 +51,25 @@ const Proyecto = () => {
                         </div>
                     </div>
                 </div>
-                <button  onClick={handleModalTarea} type="button" className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-600 hover:bg-sky-700 text-white text-center mt-6 flex items-center gap-2 justify-center">
+                <button onClick={handleModalTarea} type="button" className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-600 hover:bg-sky-700 text-white text-center mt-6 flex items-center gap-2 justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                         <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clipRule="evenodd" />
                     </svg>
 
                     agregar tarea
                 </button>
-                <ModalFormTarea modal={modal} setModal={setModal}/>
+
+                <p className="font-bold text-xl mt-10">Tareas del proyecto</p>
+                <div className="bg-white shadow mt-10 rounded-lg">
+                    {proyecto.tareas?.length ?
+                        proyecto.tareas.map(t =>(
+                            <Tarea key={t._id} tarea={t}/>
+                        )) :
+                        <p className="text-center my-5 p-10">No hay tareas en este proyecto</p>
+                    }
+                </div>
+
+                <ModalFormTarea modal={modal} setModal={setModal} />
             </>
         )
     )
