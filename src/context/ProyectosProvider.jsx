@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import clienteAxios from "../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify"
+import { data } from "autoprefixer";
 
 const ProyectosContext = createContext()
 
@@ -11,10 +12,11 @@ const ProyectoProvider = ({ children }) => {
     const [proyecto, setProyecto] = useState({})
     const [alerta, setAlerta] = useState({})
     const [cargando, setCargando] = useState(false)
-    const [modalFormTarea,  setModalFormTarea] = useState(false)
-    const [modalFormColaborador,  setModalFormColaborador] = useState(false)
-    const [tarea,  setTarea] = useState({})
-    const [modalEliminarTarea,  setModalEliminarTarea] = useState(false)
+    const [modalFormTarea, setModalFormTarea] = useState(false)
+    const [modalFormColaborador, setModalFormColaborador] = useState(false)
+    const [tarea, setTarea] = useState({})
+    const [modalEliminarTarea, setModalEliminarTarea] = useState(false)
+    const [colaborador, setColaborador] = useState({})
 
     const navgiate = useNavigate()
 
@@ -78,6 +80,10 @@ const ProyectoProvider = ({ children }) => {
 
         } catch (error) {
             console.log(error)
+            setAlerta({
+                msg : error.response.data.msg,
+                error: true
+            })
         } finally {
             setCargando(false)
         }
@@ -159,7 +165,7 @@ const ProyectoProvider = ({ children }) => {
             setProyectos(proyectosActualizados)
 
             toast.success(data.msg)
-            
+
 
             setTimeout(() => {
                 setAlerta({})
@@ -180,10 +186,10 @@ const ProyectoProvider = ({ children }) => {
     }
 
     const submitTarea = async tarea => {
-        
-        if(tarea?.id){
+
+        if (tarea?.id) {
             await editarTarea(tarea)
-        }else{
+        } else {
             await crearTarea(tarea)
         }
 
@@ -201,10 +207,10 @@ const ProyectoProvider = ({ children }) => {
                 }
             }
 
-            const {data} = await clienteAxios.post('/tareas', tarea, config)
-            
+            const { data } = await clienteAxios.post('/tareas', tarea, config)
+
             //Agregar la tarea creada al state
-            const proyectoActualizado = {...proyecto}
+            const proyectoActualizado = { ...proyecto }
             proyectoActualizado.tareas = [...proyecto.tareas, data]
             setProyecto(proyectoActualizado)
             setAlerta({})
@@ -226,12 +232,12 @@ const ProyectoProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`
                 }
             }
-            
-            const {data} = await clienteAxios.put(`/tareas/${tarea.id}`, tarea, config)
+
+            const { data } = await clienteAxios.put(`/tareas/${tarea.id}`, tarea, config)
             console.log(data)
 
             //actualizar el dom
-            const proyectoActualizado = {...proyecto}
+            const proyectoActualizado = { ...proyecto }
             proyectoActualizado.tareas = proyectoActualizado.tareas.map(tareaState => tareaState._id === data._id ? data : tareaState)
 
             setProyecto(proyectoActualizado)
@@ -243,7 +249,7 @@ const ProyectoProvider = ({ children }) => {
         }
     }
 
-    const handleModalEditarTarea = tarea =>{
+    const handleModalEditarTarea = tarea => {
         setTarea(tarea)
         setModalFormTarea(true)
     }
@@ -265,21 +271,70 @@ const ProyectoProvider = ({ children }) => {
                 }
             }
 
-            const {data} = await clienteAxios.delete(`/tareas/${tarea._id}`, config )
-            const proyectoActualizado = {...proyecto}
+            const { data } = await clienteAxios.delete(`/tareas/${tarea._id}`, config)
+            const proyectoActualizado = { ...proyecto }
             proyectoActualizado.tareas = proyectoActualizado.tareas.filter(TareaState => TareaState._id !== tarea._id)
             setProyecto(proyectoActualizado)
             toast.success(data.msg)
             setModalEliminarTarea(false)
             setTarea({})
-            
+
         } catch (error) {
             console.log(error)
         }
     }
 
     const submitColaborador = async email => {
-        console.log(email)
+        setCargando(true)
+        try {
+            const token = localStorage.getItem('token')
+            if (!token) return
+
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const { data } = await clienteAxios.post('/proyectos/colaboradores', {email} , config)
+            setColaborador(data)
+            setAlerta({})
+
+        } catch (error) {
+            mostrarAlerta({
+                msg: error.response.data.msg,
+                error: true
+            })
+        } finally {
+            setCargando(false)
+        }
+    }
+
+    const agregarColaborador = async email => {
+        try {
+
+            const token = localStorage.getItem('token')
+            if (!token) return
+
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const { data } = await clienteAxios.post(`/proyectos/colaboradores/${proyecto._id}`,  email , config)
+            toast.success(data.msg)
+            setColaborador({})
+
+        } catch (error) {
+            mostrarAlerta({
+                msg: error.response.data.msg,
+                error: true
+            })
+            setColaborador({})
+        }
     }
 
     return (
@@ -303,7 +358,9 @@ const ProyectoProvider = ({ children }) => {
                 EliminarTarea,
                 modalFormColaborador,
                 handleModalColaborador,
-                submitColaborador
+                submitColaborador,
+                colaborador,
+                agregarColaborador
             }}
         >
             {children}

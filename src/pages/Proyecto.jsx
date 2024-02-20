@@ -11,7 +11,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 const Proyecto = () => {
 
     const params = useParams()
-    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea, handleModalColaborador } = useProyectos()
+    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea, handleModalColaborador, colaborador } = useProyectos()
 
     useEffect(() => {
         obtenerProyecto(params.id)
@@ -96,6 +96,7 @@ const Proyecto = () => {
                                     agregar colaborador
                                 </button>
                             </div>
+
                         </TabPanel>
 
                     </TabPanels>
