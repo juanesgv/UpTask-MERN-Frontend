@@ -5,11 +5,13 @@ import Spinner from "../components/Spinner"
 import ModalFormTarea from "../components/ModalFormTarea"
 import Tarea from "../components/Tarea"
 import ModalEliminarTarea from "../components/ModalEliminarTarea"
+import ModalFormColaborador from "../components/ModalFormColaborador"
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 const Proyecto = () => {
 
     const params = useParams()
-    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea } = useProyectos()
+    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea, handleModalColaborador } = useProyectos()
 
     useEffect(() => {
         obtenerProyecto(params.id)
@@ -22,6 +24,7 @@ const Proyecto = () => {
     }
 
     return (
+
         cargando ? <Spinner /> : (
             <>
                 <div className="flex justify-between">
@@ -51,26 +54,56 @@ const Proyecto = () => {
                         </div>
                     </div>
                 </div>
-                <button onClick={handleModalTarea} type="button" className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-600 hover:bg-sky-700 text-white text-center mt-6 flex items-center gap-2 justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                        <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clipRule="evenodd" />
-                    </svg>
 
-                    agregar tarea
-                </button>
+                <Tabs className="mt-5">
+                    <TabList>
+                        <Tab>Tareas del proyecto</Tab>
+                        <Tab>Colaboradores</Tab>
+                    </TabList>
 
-                <p className="font-bold text-xl mt-10">Tareas del proyecto</p>
-                <div className="bg-white shadow mt-10 rounded-lg">
-                    {proyecto.tareas?.length ?
-                        proyecto.tareas.map(t =>(
-                            <Tarea key={t._id} tarea={t}/>
-                        )) :
-                        <p className="text-center my-5 p-10">No hay tareas en este proyecto</p>
-                    }
-                </div>
+                    <TabPanels>
+                        <TabPanel>
+    
+                            <div className="flex items-center justify-between mt-2">
+                                <p className="font-bold text-xl">Tareas del proyecto</p>
+                                <button onClick={handleModalTarea} type="button" className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-600 hover:bg-sky-700 text-white text-center flex items-center gap-2 justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                        <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clipRule="evenodd" />
+                                    </svg>
 
-                <ModalFormTarea/>
-                <ModalEliminarTarea/>
+                                    agregar tarea
+                                </button>
+                            </div>
+
+                            <div className="bg-white shadow mt-10 rounded-lg">
+                                {proyecto.tareas?.length ?
+                                    proyecto.tareas.map(t => (
+                                        <Tarea key={t._id} tarea={t} />
+                                    )) :
+                                    <p className="text-center my-5 p-10">No hay tareas en este proyecto</p>
+                                }
+                            </div>
+                        </TabPanel>
+
+                        <TabPanel>
+                            <div className="flex items-center justify-between mt-2">
+                                <p className="font-bold text-xl ">Colaboradores</p>
+                                <button onClick={handleModalColaborador} type="button" className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-600 hover:bg-sky-700 text-white text-center flex items-center gap-2 justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                        <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clipRule="evenodd" />
+                                    </svg>
+
+                                    agregar colaborador
+                                </button>
+                            </div>
+                        </TabPanel>
+
+                    </TabPanels>
+                </Tabs>
+
+                <ModalFormTarea />
+                <ModalEliminarTarea />
+                <ModalFormColaborador />
             </>
         )
     )

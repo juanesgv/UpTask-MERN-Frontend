@@ -13,37 +13,41 @@ import RutaProtegida from "./layouts/RutaProtegida"
 import NuevoProyecto from "./pages/NuevoProyecto"
 import Proyecto from "./pages/Proyecto"
 import EditarProyecto from "./pages/EditarProyecto"
+import NuevoColaborador from "./pages/NuevoColaborador"
 
 import { AuthProvider } from "./context/AuthProvider"
 import { ProyectoProvider } from "./context/ProyectosProvider"
+import { ChakraProvider } from '@chakra-ui/react'
 
 
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <ProyectoProvider>
-          <Routes>
-            <Route path="/" element={<AuthLayout />}>
-              <Route index element={<Login />} />
-              <Route path="registrar" element={<Registrar />} />
-              <Route path="olvide-password" element={<OlvidePassword />} />
-              <Route path="olvide-password/:token" element={<NuevoPassword />} />
-              <Route path="confirmar/:token" element={<ConfirmarCuenta />} />
-            </Route>
+    <ChakraProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <ProyectoProvider>
+            <Routes>
+              <Route path="/" element={<AuthLayout />}>
+                <Route index element={<Login />} />
+                <Route path="registrar" element={<Registrar />} />
+                <Route path="olvide-password" element={<OlvidePassword />} />
+                <Route path="olvide-password/:token" element={<NuevoPassword />} />
+                <Route path="confirmar/:token" element={<ConfirmarCuenta />} />
+              </Route>
 
-            <Route path="/proyectos" element={<RutaProtegida />}>
-              <Route index element={<Proyectos />} />
-              <Route path="crear-proyecto" element={<NuevoProyecto />} />
-              <Route path=":id" element={<Proyecto />} />
-              <Route path="editar/:id" element={<EditarProyecto />} />
-            </Route>
-          </Routes>
-        </ProyectoProvider>
-      </AuthProvider>
-    </BrowserRouter>
+              <Route path="/proyectos" element={<RutaProtegida />}>
+                <Route index element={<Proyectos />} />
+                <Route path="crear-proyecto" element={<NuevoProyecto />} />
+                <Route path=":id" element={<Proyecto />} />
+                <Route path="editar/:id" element={<EditarProyecto />} />
+              </Route>
+            </Routes>
+          </ProyectoProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ChakraProvider>
   )
 }
 

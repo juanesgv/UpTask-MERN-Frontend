@@ -12,6 +12,7 @@ const ProyectoProvider = ({ children }) => {
     const [alerta, setAlerta] = useState({})
     const [cargando, setCargando] = useState(false)
     const [modalFormTarea,  setModalFormTarea] = useState(false)
+    const [modalFormColaborador,  setModalFormColaborador] = useState(false)
     const [tarea,  setTarea] = useState({})
     const [modalEliminarTarea,  setModalEliminarTarea] = useState(false)
 
@@ -174,6 +175,10 @@ const ProyectoProvider = ({ children }) => {
         setModalFormTarea(!modalFormTarea)
         setTarea({})
     }
+    const handleModalColaborador = () => {
+        setModalFormColaborador(!modalFormColaborador)
+        console.log("di clic")
+    }
 
     const submitTarea = async tarea => {
         
@@ -292,7 +297,9 @@ const ProyectoProvider = ({ children }) => {
                 tarea,
                 modalEliminarTarea,
                 handleModalEliminarTarea,
-                EliminarTarea
+                EliminarTarea,
+                modalFormColaborador,
+                handleModalColaborador
             }}
         >
             {children}
