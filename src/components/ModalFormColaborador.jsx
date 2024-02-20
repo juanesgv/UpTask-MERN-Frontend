@@ -7,15 +7,28 @@ import { useParams } from 'react-router-dom'
 
 const ModalFormColaborador = () => {
 
-    const {modalFormColaborador, handleModalColaborador} = useProyectos()
+    const {modalFormColaborador, handleModalColaborador, mostrarAlerta, alerta, submitColaborador} = useProyectos()
+    const [emailColaborador, setEmailColaborador] = useState('')
 
     const params = useParams()
 
     const handleSubmit = async e => {
         e.preventDefault()
-        console.log("di clic en el formulario")
+
+        if(emailColaborador === ''){
+            mostrarAlerta({
+                msg: 'El correo electrónico es obligatorio',
+                error: true
+            })
+            return
+        }
+
+        submitColaborador(emailColaborador)
     }
- 
+
+    
+    const {msg} = alerta
+
     return (
         <Transition.Root show={modalFormColaborador} as={Fragment}>
             <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={handleModalColaborador}>
@@ -71,18 +84,18 @@ const ModalFormColaborador = () => {
                                         Argegar colaborador
                                     </Dialog.Title>
 
-                                    {/* {msg && <Alerta alerta={alerta}/>} */}
+                                    {msg && <Alerta alerta={alerta}/>}
 
                                     <form className='my-10' onSubmit={handleSubmit}>
                                         <div className='mb-5'>
-                                            <label className='text-gray-700 uppercase font-bold text-sm' htmlFor='nombre'>Correo electrónico</label>
+                                            <label className='text-gray-700 uppercase font-bold text-sm' htmlFor='email'>Correo electrónico</label>
                                             <input
-                                                type='text'
-                                                id='nombre'
+                                                type='email'
+                                                id='email'
                                                 placeholder='Correo electrónico del colaborador'
                                                 className='border w-full p-2 mt-2 placeholder-gray-400 rounded-md'
-                                                // value={nombre}
-                                                // onChange={e => setNombre(e.target.value)}
+                                                value={emailColaborador}
+                                                onChange={e => setEmailColaborador(e.target.value)}
                                             />
                                         </div>
 

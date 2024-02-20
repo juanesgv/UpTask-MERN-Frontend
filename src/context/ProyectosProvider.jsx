@@ -177,7 +177,6 @@ const ProyectoProvider = ({ children }) => {
     }
     const handleModalColaborador = () => {
         setModalFormColaborador(!modalFormColaborador)
-        console.log("di clic")
     }
 
     const submitTarea = async tarea => {
@@ -279,6 +278,10 @@ const ProyectoProvider = ({ children }) => {
         }
     }
 
+    const submitColaborador = async email => {
+        console.log(email)
+    }
+
     return (
         <ProyectosContext.Provider
             value={{
@@ -299,7 +302,8 @@ const ProyectoProvider = ({ children }) => {
                 handleModalEliminarTarea,
                 EliminarTarea,
                 modalFormColaborador,
-                handleModalColaborador
+                handleModalColaborador,
+                submitColaborador
             }}
         >
             {children}

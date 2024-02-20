@@ -13,13 +13,10 @@ import RutaProtegida from "./layouts/RutaProtegida"
 import NuevoProyecto from "./pages/NuevoProyecto"
 import Proyecto from "./pages/Proyecto"
 import EditarProyecto from "./pages/EditarProyecto"
-import NuevoColaborador from "./pages/NuevoColaborador"
 
 import { AuthProvider } from "./context/AuthProvider"
 import { ProyectoProvider } from "./context/ProyectosProvider"
 import { ChakraProvider } from '@chakra-ui/react'
-
-
 
 function App() {
 
