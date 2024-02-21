@@ -6,12 +6,16 @@ import ModalFormTarea from "../components/ModalFormTarea"
 import Tarea from "../components/Tarea"
 import ModalEliminarTarea from "../components/ModalEliminarTarea"
 import ModalFormColaborador from "../components/ModalFormColaborador"
+import Colaborador from "../components/Colaborador"
+import ModalEliminarColaborador from "../components/ModalEliminarColaborador"
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 
 const Proyecto = () => {
 
     const params = useParams()
-    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea, handleModalColaborador, colaborador } = useProyectos()
+    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea, handleModalColaborador } = useProyectos()
+
+    
 
     useEffect(() => {
         obtenerProyecto(params.id)
@@ -63,7 +67,7 @@ const Proyecto = () => {
 
                     <TabPanels>
                         <TabPanel>
-    
+
                             <div className="flex items-center justify-between mt-2">
                                 <p className="font-bold text-xl">Tareas del proyecto</p>
                                 <button onClick={handleModalTarea} type="button" className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-600 hover:bg-sky-700 text-white text-center flex items-center gap-2 justify-center">
@@ -96,6 +100,15 @@ const Proyecto = () => {
                                     agregar colaborador
                                 </button>
                             </div>
+                            
+                            <div className="bg-white shadow mt-10 rounded-lg">
+                                {proyecto.colaboradores?.length ?
+                                    proyecto.colaboradores.map(t => (
+                                        <Colaborador key={t._id} colaborador={t} />
+                                    )) :
+                                    <p className="text-center my-5 p-10">No hay colaboradores en este proyecto</p>
+                                }
+                            </div>                
 
                         </TabPanel>
 
@@ -105,6 +118,7 @@ const Proyecto = () => {
                 <ModalFormTarea />
                 <ModalEliminarTarea />
                 <ModalFormColaborador />
+                <ModalEliminarColaborador/>
             </>
         )
     )

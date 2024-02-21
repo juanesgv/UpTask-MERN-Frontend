@@ -12,11 +12,13 @@ const ProyectoProvider = ({ children }) => {
     const [proyecto, setProyecto] = useState({})
     const [alerta, setAlerta] = useState({})
     const [cargando, setCargando] = useState(false)
+    const [cargandoModal, setCargandoModal] = useState(false)
     const [modalFormTarea, setModalFormTarea] = useState(false)
     const [modalFormColaborador, setModalFormColaborador] = useState(false)
     const [tarea, setTarea] = useState({})
     const [modalEliminarTarea, setModalEliminarTarea] = useState(false)
     const [colaborador, setColaborador] = useState({})
+    const [modalEliminarColaborador, setModalEliminarColaborador] = useState(false)
 
     const navgiate = useNavigate()
 
@@ -81,7 +83,7 @@ const ProyectoProvider = ({ children }) => {
         } catch (error) {
             console.log(error)
             setAlerta({
-                msg : error.response.data.msg,
+                msg: error.response.data.msg,
                 error: true
             })
         } finally {
@@ -284,8 +286,9 @@ const ProyectoProvider = ({ children }) => {
         }
     }
 
+
     const submitColaborador = async email => {
-        setCargando(true)
+        setCargandoModal(true)
         try {
             const token = localStorage.getItem('token')
             if (!token) return
@@ -297,7 +300,7 @@ const ProyectoProvider = ({ children }) => {
                 }
             }
 
-            const { data } = await clienteAxios.post('/proyectos/colaboradores', {email} , config)
+            const { data } = await clienteAxios.post('/proyectos/colaboradores', { email }, config)
             setColaborador(data)
             setAlerta({})
 
@@ -307,7 +310,7 @@ const ProyectoProvider = ({ children }) => {
                 error: true
             })
         } finally {
-            setCargando(false)
+            setCargandoModal(false)
         }
     }
 
@@ -324,9 +327,19 @@ const ProyectoProvider = ({ children }) => {
                 }
             }
 
-            const { data } = await clienteAxios.post(`/proyectos/colaboradores/${proyecto._id}`,  email , config)
-            toast.success(data.msg)
+            const { data } = await clienteAxios.post(`/proyectos/colaboradores/${proyecto._id}`, email, config)
+
+            // Actualizar el estado del proyecto para reflejar el cambio
+            // const proyectoActualizado = { ...proyecto }
+            // proyectoActualizado.colaboradores = [...proyecto.colaboradores, data]
+            // console.log("Proyecto acualizado", proyectoActualizado)
+            // setProyecto(proyectoActualizado)
+
             setColaborador({})
+            toast.success(data.msg)
+
+            // Cerrar el modal
+            setModalFormColaborador(false);
 
         } catch (error) {
             mostrarAlerta({
@@ -334,6 +347,38 @@ const ProyectoProvider = ({ children }) => {
                 error: true
             })
             setColaborador({})
+        }
+    }
+
+    const handleModalEliminarColaborador = colaborador => {
+        setModalEliminarColaborador(!modalEliminarColaborador)
+        setColaborador(colaborador)
+    }
+
+    const EliminarColaborador = async () => {
+
+        try {
+            const token = localStorage.getItem('token')
+            if (!token) return
+
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+            const { data } = await clienteAxios.post(`/proyectos/eliminar-colaborador/${proyecto._id}`, { id: colaborador._id }, config)
+
+            const proyectoActualizado = { ...proyecto }
+            proyectoActualizado.colaboradores = proyectoActualizado.colaboradores.filter(colaboradorState => colaboradorState._id !== colaborador._id)
+            setProyecto(proyectoActualizado)
+
+            toast.success(data.msg)
+            setColaborador({})
+            setModalEliminarColaborador(false)
+
+        } catch (error) {
+
         }
     }
 
@@ -347,6 +392,7 @@ const ProyectoProvider = ({ children }) => {
                 obtenerProyecto,
                 proyecto,
                 cargando,
+                cargandoModal,
                 eliminarProyecto,
                 modalFormTarea,
                 handleModalTarea,
@@ -360,7 +406,10 @@ const ProyectoProvider = ({ children }) => {
                 handleModalColaborador,
                 submitColaborador,
                 colaborador,
-                agregarColaborador
+                agregarColaborador,
+                modalEliminarColaborador,
+                handleModalEliminarColaborador,
+                EliminarColaborador
             }}
         >
             {children}

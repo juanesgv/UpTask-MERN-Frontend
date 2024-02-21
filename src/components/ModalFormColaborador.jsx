@@ -2,12 +2,13 @@ import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import useProyectos from '../hooks/useProyectos'
 import Alerta from './Alerta'
+import Spinner from './Spinner'
 import { useParams } from 'react-router-dom'
 
 
 const ModalFormColaborador = () => {
 
-    const { modalFormColaborador, handleModalColaborador, mostrarAlerta, alerta, submitColaborador, colaborador, agregarColaborador } = useProyectos()
+    const { modalFormColaborador, handleModalColaborador, mostrarAlerta, alerta, submitColaborador, colaborador, agregarColaborador, cargandoModal } = useProyectos()
     const [emailColaborador, setEmailColaborador] = useState('')
 
     const handleSubmit = async e => {
@@ -104,7 +105,7 @@ const ModalFormColaborador = () => {
                                         />
                                     </form>
 
-                                    {colaborador?._id && (
+                                    {cargandoModal ? <Spinner /> : colaborador?._id && (
                                         <div className="flex justify-center mt-10">
                                             <div className="bg-white p-5 rounded-lg w-full border-2 border-gray-200">
                                                 <h2 className="text-center mb-5 text-2xl font-bold">Resultado: </h2>
