@@ -329,14 +329,23 @@ const ProyectoProvider = ({ children }) => {
 
             const { data } = await clienteAxios.post(`/proyectos/colaboradores/${proyecto._id}`, email, config)
 
-            // Actualizar el estado del proyecto para reflejar el cambio
-            // const proyectoActualizado = { ...proyecto }
-            // proyectoActualizado.colaboradores = [...proyecto.colaboradores, data]
-            // console.log("Proyecto acualizado", proyectoActualizado)
-            // setProyecto(proyectoActualizado)
+            const colaboradorActual = {...colaborador} //hago una copia al colaborador actual, que lo tengo desde submitColaborador
 
-            setColaborador({})
+            // Actualizar el estado del proyecto para reflejar el cambio
+            const proyectoActualizado = { ...proyecto }
+            proyectoActualizado.colaboradores = [...proyecto.colaboradores, colaboradorActual]
+            console.log("Proyecto acualizado", proyectoActualizado)
+            setProyecto(proyectoActualizado)
+
+            //actualizar el estado del proyecto para reflejar el cambio (esta tambien me sirvió)
+            // setProyecto((prevProyecto)=>{
+            //     const nuevoProyecto = {...prevProyecto}
+            //     nuevoProyecto.colaboradores = [...prevProyecto.colaboradores, colaboradorActual]
+            //     return nuevoProyecto
+            // })
+
             toast.success(data.msg)
+            setColaborador({})
 
             // Cerrar el modal
             setModalFormColaborador(false);
