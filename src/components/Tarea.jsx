@@ -15,9 +15,10 @@ const Tarea = ({ tarea }) => {
                 <p className="mb-1 text-sm text-gray-500">{descripcion}</p>
                 <p className="mb-1 text-sm">{formatearFecha(fechaEntrega)}</p>
                 <p className="mb-1 text-gray-600">Prioridad: {prioridad}</p>
+                { estado && <p className="text-xs bg-green-600  p-1 rounded-lg text-white">Completada por: {tarea.completado.nombre}</p> }
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex flex-col lg:flex-row gap-2">
             
                 <button className={`${estado ? 'bg-sky-600' : 'bg-gray-600' }  px-4 py-3 text-white uppercase font-bold text-sm rounded-lg`} onClick={()=> completarTarea(_id)}>{estado ? 'Completa' : 'Incompleta'}</button>
                 
