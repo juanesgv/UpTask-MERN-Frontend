@@ -32,9 +32,6 @@ const Login = () => {
             navigate('/proyectos')
             setAuth(data)
 
-            // Forzar una recarga después de la autenticación exitosa
-            window.location.reload();
-
         } catch (error) {
             setAlerta({
                 msg: error.response.data.msg,
