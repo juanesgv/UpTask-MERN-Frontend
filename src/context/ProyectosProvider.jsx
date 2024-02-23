@@ -2,7 +2,9 @@ import { createContext, useState, useEffect } from "react";
 import clienteAxios from "../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify"
-import { data } from "autoprefixer";
+import { io } from "socket.io-client";
+
+let socket
 
 const ProyectosContext = createContext()
 
@@ -45,6 +47,10 @@ const ProyectoProvider = ({ children }) => {
         }
 
         obtenerProyectos()
+    }, [])
+
+    useEffect(() => {
+        socket = io(import.meta.env.VITE_API_URL)
     }, [])
 
     const mostrarAlerta = alerta => {
@@ -213,13 +219,12 @@ const ProyectoProvider = ({ children }) => {
 
             const { data } = await clienteAxios.post('/tareas', tarea, config)
 
-            //Agregar la tarea creada al state
-            const proyectoActualizado = { ...proyecto }
-            proyectoActualizado.tareas = [...proyecto.tareas, data]
-            setProyecto(proyectoActualizado)
             setAlerta({})
             setModalFormTarea(false)
             toast.success('Tarea creada exitosamente')
+
+            //socket io
+            socket.emit('nueva tarea', data) //la tarea creada la paso al socket
         } catch (error) {
             console.log(error)
         }
@@ -331,7 +336,7 @@ const ProyectoProvider = ({ children }) => {
 
             const { data } = await clienteAxios.post(`/proyectos/colaboradores/${proyecto._id}`, email, config)
 
-            const colaboradorActual = {...colaborador} //hago una copia al colaborador actual, que lo tengo desde submitColaborador
+            const colaboradorActual = { ...colaborador } //hago una copia al colaborador actual, que lo tengo desde submitColaborador
 
             // Actualizar el estado del proyecto para reflejar el cambio
             const proyectoActualizado = { ...proyecto }
@@ -405,14 +410,14 @@ const ProyectoProvider = ({ children }) => {
                 }
             }
 
-            const {data} = await clienteAxios.post(`/tareas/estado/${id}`, {}, config)
-            const proyectoActualido = {...proyecto}
+            const { data } = await clienteAxios.post(`/tareas/estado/${id}`, {}, config)
+            const proyectoActualido = { ...proyecto }
             proyectoActualido.tareas = proyectoActualido.tareas.map(tareaState => tareaState._id === data._id ? data : tareaState)
             setProyecto(proyectoActualido)
             setTarea({})
             setAlerta({})
             toast.success('Tarea actualizada exitosamente')
-            
+
         } catch (error) {
             console.log(error.response)
         }
@@ -420,6 +425,14 @@ const ProyectoProvider = ({ children }) => {
 
     const handleBuscador = () => {
         setBuscador(!buscador)
+    }
+
+    //Socket.io
+    const submitTareasProyecto = tarea => {
+        //Agregar la tarea creada al state
+        const proyectoActualizado = { ...proyecto }
+        proyectoActualizado.tareas = [...proyectoActualizado.tareas, tarea]
+        setProyecto(proyectoActualizado)
     }
 
     return (
@@ -452,7 +465,8 @@ const ProyectoProvider = ({ children }) => {
                 EliminarColaborador,
                 completarTarea,
                 buscador,
-                handleBuscador
+                handleBuscador,
+                submitTareasProyecto
             }}
         >
             {children}

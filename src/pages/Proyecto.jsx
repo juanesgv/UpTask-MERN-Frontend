@@ -10,16 +10,32 @@ import ModalFormColaborador from "../components/ModalFormColaborador"
 import Colaborador from "../components/Colaborador"
 import ModalEliminarColaborador from "../components/ModalEliminarColaborador"
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { io } from "socket.io-client"
+
+let socket
 
 const Proyecto = () => {
 
     const params = useParams()
-    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea, handleModalColaborador } = useProyectos()
+    const { obtenerProyecto, proyecto, cargando, eliminarProyecto, handleModalTarea, handleModalColaborador, submitTareasProyecto } = useProyectos()
     const admin = useAdmin()
 
     useEffect(() => {
         obtenerProyecto(params.id)
     }, [])
+
+    useEffect(() =>{
+        socket = io(import.meta.env.VITE_API_URL)
+        socket.emit('abrir proyecto', params.id)
+    },[])
+
+    useEffect(()=>{
+        socket.on("tarea agregada",  tareaNueva => {
+            if(tareaNueva.proyecto === proyecto._id){ //verifica si el id del proyecto de la tarea enviada desde socket.io es el mismo del proyecto que está en el state
+                submitTareasProyecto(tareaNueva)
+            }
+        })
+    })
 
     const handleClick = () => {
         if (confirm('¿Deseas eliminar el proyecto?')) {

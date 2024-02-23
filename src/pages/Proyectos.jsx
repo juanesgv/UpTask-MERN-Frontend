@@ -2,24 +2,10 @@ import { useEffect } from "react"
 import useProyectos from "../hooks/useProyectos"
 import PreviewProyecto from "../components/PreviewProyecto"
 import Spinner from "../components/Spinner"
-import { io } from "socket.io-client"
-
-let socket
 
 const Proyectos = () => {
 
   const { proyectos, cargando } = useProyectos()
-
-  useEffect(()=>{
-    //enviamos datos al servidor con el evento 'prueba'
-    socket = io(import.meta.env.VITE_API_URL)
-    socket.emit('prueba', proyectos)
-
-    //respuesta del servidor
-    socket.on('respuesta', (persona)=>{
-      console.log('Desde el frontend', persona)
-    })
-  },) //useEffect sin dependencia para qu esté escuchando todo el momento
 
   return (
     cargando ? (
