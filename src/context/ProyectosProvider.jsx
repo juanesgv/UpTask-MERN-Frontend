@@ -243,16 +243,14 @@ const ProyectoProvider = ({ children }) => {
             }
 
             const { data } = await clienteAxios.put(`/tareas/${tarea.id}`, tarea, config)
-            console.log(data)
 
-            //actualizar el dom
-            const proyectoActualizado = { ...proyecto }
-            proyectoActualizado.tareas = proyectoActualizado.tareas.map(tareaState => tareaState._id === data._id ? data : tareaState)
-
-            setProyecto(proyectoActualizado)
             setAlerta({})
             setModalFormTarea(false)
             toast.success('Tarea editada exitosamente')
+
+            //socket io
+            socket.emit('actualizar tarea', data)
+
         } catch (error) {
             console.log(error)
         }
@@ -281,11 +279,13 @@ const ProyectoProvider = ({ children }) => {
             }
 
             const { data } = await clienteAxios.delete(`/tareas/${tarea._id}`, config)
-            const proyectoActualizado = { ...proyecto }
-            proyectoActualizado.tareas = proyectoActualizado.tareas.filter(TareaState => TareaState._id !== tarea._id)
-            setProyecto(proyectoActualizado)
+
             toast.success(data.msg)
             setModalEliminarTarea(false)
+            
+            //socket io
+            socket.emit('eliminar tarea', tarea)
+
             setTarea({})
 
         } catch (error) {
@@ -394,7 +394,7 @@ const ProyectoProvider = ({ children }) => {
             setModalEliminarColaborador(false)
 
         } catch (error) {
-
+            console.log(error)
         }
     }
 
@@ -411,12 +411,13 @@ const ProyectoProvider = ({ children }) => {
             }
 
             const { data } = await clienteAxios.post(`/tareas/estado/${id}`, {}, config)
-            const proyectoActualido = { ...proyecto }
-            proyectoActualido.tareas = proyectoActualido.tareas.map(tareaState => tareaState._id === data._id ? data : tareaState)
-            setProyecto(proyectoActualido)
+            
             setTarea({})
             setAlerta({})
             toast.success('Tarea actualizada exitosamente')
+
+            //socket io
+            socket.emit('cambiar estado', data)
 
         } catch (error) {
             console.log(error.response)
@@ -434,6 +435,27 @@ const ProyectoProvider = ({ children }) => {
         proyectoActualizado.tareas = [...proyectoActualizado.tareas, tarea]
         setProyecto(proyectoActualizado)
     }
+
+    const eliminarTareaProyecto = tarea => {
+        const proyectoActualizado = { ...proyecto }
+        proyectoActualizado.tareas = proyectoActualizado.tareas.filter(TareaState => TareaState._id !== tarea._id)
+        setProyecto(proyectoActualizado)
+    }
+    
+    const editarTareaProyecto = tarea => {
+        //actualizar el dom
+        const proyectoActualizado = { ...proyecto }
+        proyectoActualizado.tareas = proyectoActualizado.tareas.map(tareaState => tareaState._id === tarea._id ? tarea : tareaState)
+        setProyecto(proyectoActualizado)
+    }
+
+    const completarTareaProyecto = tarea => {
+        const proyectoActualido = { ...proyecto }
+        proyectoActualido.tareas = proyectoActualido.tareas.map(tareaState => tareaState._id === tarea._id ? tarea : tareaState)
+        setProyecto(proyectoActualido)
+    }
+
+
 
     return (
         <ProyectosContext.Provider
@@ -466,7 +488,10 @@ const ProyectoProvider = ({ children }) => {
                 completarTarea,
                 buscador,
                 handleBuscador,
-                submitTareasProyecto
+                submitTareasProyecto,
+                eliminarTareaProyecto,
+                editarTareaProyecto,
+                completarTareaProyecto
             }}
         >
             {children}
